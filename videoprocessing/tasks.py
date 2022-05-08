@@ -17,7 +17,7 @@ def create_task(id, name):
     counter = 0
     s.enter(1, 2, do_delay, (s,id, counter))
     s.run()
-    r = requests.patch('http://127.0.0.1:8000/api/video/update/{}/'.format(id), json={"result": "success"})
+    r = requests.patch('http://34.216.9.130:8000/api/video/update/{}/'.format(id), json={"result": "success"})
     with open('result.txt', 'w') as f:
         f.write(str(video_duration(name)))
         
@@ -26,7 +26,7 @@ def create_task(id, name):
 
 def do_delay(sc, id, counter):
     
-    r = requests.patch('http://127.0.0.1:8000/api/video/update/{}/'.format(id), json={"result": "in_progress", "progress": counter})
+    r = requests.patch('http://34.216.9.130:8000/api/video/update/{}/'.format(id), json={"result": "in_progress", "progress": counter})
     if counter == 10:
         return
     counter = counter+1
