@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+    redis-overcommit:
+        build: https://github.com/bkuhl/redis-overcommit-on-host.git
+        restart: 'no'
+        privileged: true
+        volumes:
+          - /proc/sys/vm:/mnt/vm
+    redis:
+        image: redis
+
+    web:
+        command: > 
+                   while :;
+                   do exec ./manage.py runserver 0.0.0.0:8000;
+                   done;
+                   "
+        image: "web"
+        build: .
+        stop_signal: SIGINT
+        stdin_open: true
+        tty: true
+        depends_on:
+            - redis
+        volumes: 
+            - .:/code:cached
+        ports: 
+            - "8000:8000"        
+        environment: 
+            IN_DOCKER: 1
+
+    celery:
+        build: .
+        command: celery -A videoprocessing worker -l info
+        volumes:
+            - .:/usr/src/app/
+        environment: 
+            IN_DOCKER: 1
+        depends_on:
+            - redis
