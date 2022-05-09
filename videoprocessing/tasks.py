@@ -8,8 +8,8 @@ s = sched.scheduler(time.time, time.sleep)
 @shared_task
 def create_task(id, name):
     session = boto3.Session(
-            aws_access_key_id='AKIAZVZNJBXI35X2S4MP',
-            aws_secret_access_key='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'
+            aws_access_key_id='key_id',
+            aws_secret_access_key='key'
         )
     s3 = session.resource('s3')
     result = s3.Bucket('vh-s3').download_file('{}/{}'.format(str(id), name), name)
